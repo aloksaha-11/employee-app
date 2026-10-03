@@ -18,7 +18,12 @@
         <failOnMissingWebXml>false</failOnMissingWebXml>
 
         <jakarta-servlet-api.version>6.1.0</jakarta-servlet-api.version>
+        <mysql-connector-j.version>26.7.0</mysql-connector-j.version>
+        <log4j.version>2.26.1</log4j.version>
+        <hibernate-core.version>7.4.11.Final</hibernate-core.version>
+        <junit-jupiter.version>6.1.3</junit-jupiter.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
         <jetty-ee11-maven-plugin.version>12.1.0</jetty-ee11-maven-plugin.version>
     </properties>
 
@@ -29,6 +34,40 @@
             <artifactId>jakarta.servlet-api</artifactId>
             <version>${jakarta-servlet-api.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- MySQL JDBC driver (successor to the retired mysql:mysql-connector-java) -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>${mysql-connector-j.version}</version>
+        </dependency>
+
+        <!-- Hibernate ORM (Jakarta Persistence) -->
+        <dependency>
+            <groupId>org.hibernate.orm</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>${hibernate-core.version}</version>
+        </dependency>
+
+        <!-- Log4j 2 logging -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- JUnit 5+ (Jupiter) for tests -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>${junit-jupiter.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -45,11 +84,31 @@
                 </configuration>
             </plugin>
 
-            <!-- Local run: mvn jetty:run -> http://localhost:8080/ -->
+            <!-- Runs JUnit Jupiter tests on mvn test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+            </plugin>
+
+            <!-- Local run: mvn jetty:run -> http://localhost:8081/employee-app/ (8080 is taken by a local Tomcat) -->
             <plugin>
                 <groupId>org.eclipse.jetty.ee11</groupId>
                 <artifactId>jetty-ee11-maven-plugin</artifactId>
                 <version>${jetty-ee11-maven-plugin.version}</version>
+                <configuration>
+                    <httpConnector>
+                        <port>8081</port>
+                    </httpConnector>
+                    <!-- Same context path as the WAR under Tomcat -->
+                    <webApp>
+                        <contextPath>/employee-app</contextPath>
+                    </webApp>
+                    <systemProperties>
+                        <!-- Load logging config straight from source so edits apply on the next jetty:run -->
+                        <log4j2.configurationFile>${project.basedir}/src/main/resources/log4j2.properties</log4j2.configurationFile>
+                    </systemProperties>
+                </configuration>
             </plugin>
         </plugins>
     </build>

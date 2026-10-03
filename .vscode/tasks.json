@@ -1,0 +1,16 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run app (Jetty)",
+            "detail": "mvn jetty:run -> http://localhost:8081/hello-world",
+            "type": "shell",
+            "command": "mvn jetty:run",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
