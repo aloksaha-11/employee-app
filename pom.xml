@@ -25,6 +25,7 @@
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
         <maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
         <jetty-ee11-maven-plugin.version>12.1.0</jetty-ee11-maven-plugin.version>
+        <jackson.version>2.22.3</jackson.version>
     </properties>
 
     <dependencies>
@@ -60,6 +61,13 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Jackson: converts Java objects to and from JSON -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- JUnit 5+ (Jupiter) for tests -->

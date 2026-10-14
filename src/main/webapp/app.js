@@ -18,7 +18,7 @@ function printSalary(salary) {
 function getEmployee() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = processRequest;
-  xhttp.open("GET", "http://localhost:8080/employee-app/rest", true);
+  xhttp.open("GET", "./api", true);
   xhttp.send();
 }
 function ProcessRequest() {

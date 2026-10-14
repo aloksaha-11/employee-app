@@ -1,27 +1,108 @@
-<h1>Employee Application</h1>
+<!doctype html>
 
-<h2>Add Employee</h2>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<form method="POST" action="./api">
-  ID <input name="id" /> <br />
-  Name <input name="name" /> <br />
-  Age <input name="age" /> <br />
-  <button type="submit">Submit</button>
-</form>
-<br />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
 
-<h2>View All Employees</h2>
-<a href="./api">View All Employees</a>
+  <body>
 
-<h2>View An Employee</h2>
-<form method="GET" action="./api">
-  ID <input name="id" /> <br />
-  <button type="submit">Submit</button>
-</form>
+  <div class="container">
 
-<h2>Delete An Employee</h2>
-<form method="GET" action="./api">
-  ID <input name="id" /> <br />
-  <input type="hidden" name="action" value="delete" />
-  <button type="submit">Submit</button>
-</form>
+      <div class="row">
+        <div class="col">
+          <h1>Employee Application</h1>
+        </div>
+      </div> <!-- Row end -->
+
+      <div class="row">
+        <div class="col">
+          <form method="POST" action="./api">
+            ID <input name="id" /> <br> <br />
+            Name <input name="name" /> <br> <br />
+            Age <input name="age" /> <br> <br />
+            <button type="submit">Submit</button> <br> <br />
+          </form>
+      </div>
+
+      <div class="row">
+          <div class="col">
+            <h2>View All Employees</h2>
+            <a href="./api">View all Employees</a> <br />
+          </div>
+      </div>         <!--Row end -->
+
+      <div class="row">
+          <div class="col">
+            <h2>View All Employees</h2>
+            <a href="./api">View all Employees</a> <br> <br />
+          </div>
+      </div>         <!--Row end -->
+
+      <div class="row">
+          <div class="col">
+            <h2>View An Employee</h2> <br />
+            <form method="GET" action="./api">
+              ID <input name="id" /> <br> <br />
+              <button type="submit">Submit</button> <br> <br />
+            </form>
+          </div>
+      </div>         <!--Row end -->
+
+      <div class="row">
+          <div class="col"> 
+            <h2>Delete An Employee</h2> <br />
+            <form method="GET" action="./api">
+              ID <input name="id" /> <br> <br />
+              <input type="hidden" name="action" value="delete" />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+      </div>
+
+    <!-- <h2>Add Employee</h2>
+
+    <form method="POST" action="./api">
+      ID <input name="id" /> <br />
+      Name <input name="name" /> <br />
+      Age <input name="age" /> <br />
+      <button type="submit">Submit</button>
+    </form>
+    <br />
+
+    <h2>View All Employees</h2>
+    <a href="./api">View All Employees</a>
+
+    <h2>View An Employee</h2>
+    <form method="GET" action="./api">
+      ID <input name="id" /> <br />
+      <button type="submit">Submit</button>
+    </form>
+
+    <h2>Delete An Employee</h2>
+    <form method="GET" action="./api">
+      ID <input name="id" /> <br />
+      <input type="hidden" name="action" value="delete" />
+      <button type="submit">Submit</button>
+    </form> -->
+      </div>
+      <!-- Row end -->
+    </div>
+    <!-- Container end -->
+
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

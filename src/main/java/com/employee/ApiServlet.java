@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet(name = "HelloWorld", description = "sample servlet", urlPatterns = { "/api"})
+@WebServlet(name = "Api Servlet", description = "api servlet", urlPatterns = { "/api"})
 
 public class ApiServlet extends HttpServlet {
 
@@ -34,54 +34,38 @@ public class ApiServlet extends HttpServlet {
         }
 
         String idParam = req.getParameter("id");
-
-        // No id: list every employee
-        if (idParam == null) {
-            List<EmployeePojo> list;
-            try {
-                list = api.selectAll();
-            } catch (SQLException e) {
-                throw new ServletException("Error retrieving employee list", e);
-            }
-            resp.setContentType("text/html");
-            PrintWriter out = resp.getWriter();
-            out.println("<h1>All Employees</h1>");
-            for (EmployeePojo p : list) {
-                print(out, p);
-            }
-            return;
-        }
-
-        int id = Integer.valueOf(idParam);
-        EmployeePojo p;
+        // Holds either the whole list or one employee; both are turned into JSON the same way
+        Object response;
         try {
-             p = api.select(id);
+            if (idParam == null) {
+                // No id: list every employee
+                List<EmployeePojo> list = api.selectAll();
+                response = list;
+            } else {
+                int id = Integer.valueOf(idParam);
+                EmployeePojo p = api.select(id);
+                if (p == null) {
+                    resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No employee with id " + id);
+                    return;
+                }
+                response = p;
+            }
         } catch (SQLException e) {
-            throw new ServletException("Error retrieving single employee", e);
-        }
-        if (p == null) {
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No employee with id " + id);
-            return;
+            throw new ServletException("Error retrieving employee data", e);
         }
 
-        resp.setContentType("text/html");
+        resp.setContentType("application/json");
+        resp.setCharacterEncoding("UTF-8");
         PrintWriter out = resp.getWriter();
-        out.println("<h1>Employee Details</h1>");
-        print(out, p);
+        out.write(JsonUtil.toJson(response));
     }
 
    
    //Creating
    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String id = req.getParameter("id");
-        String age = req.getParameter("age");
-
-        EmployeePojo p = new EmployeePojo();
-        p.setAge(Integer.valueOf(age));
-        p.setId(Integer.valueOf(id));
-        p.setName(name);
+        // Body is JSON such as {"id":7,"name":"Ravi","age":30}; Jackson fills in all three fields
+        EmployeePojo p = JsonUtil.fromJson(req);
         try {
               api.insert(p);
         } catch (SQLException e) {
@@ -95,19 +79,20 @@ public class ApiServlet extends HttpServlet {
     //Updating
     @Override 
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("name");
-        String id = req.getParameter("id");
-        String age = req.getParameter("age");
-
-        EmployeePojo p = new EmployeePojo();
-        p.setAge(Integer.valueOf(age));
-        p.setId(Integer.valueOf(id));
-        p.setName(name);
+        // Body is JSON such as {"id":7,"name":"Ravi","age":31}; the id picks which employee to change
+        EmployeePojo p = JsonUtil.fromJson(req);
+        boolean updated;
         try {
-              api.update(p.getId(), p);
+              updated = api.update(p.getId(), p);
         } catch (SQLException e) {
             throw new ServletException("Error updating object", e);
         }
+        if (!updated) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No employee with id " + p.getId());
+            return;
+        }
+        PrintWriter out = resp.getWriter();
+        out.println("Employee updated successfully");
     }
     
     //Deleting
@@ -129,13 +114,4 @@ public class ApiServlet extends HttpServlet {
         out.println("<h1>Employee Deleted</h1>");
     }
 
-    private void print(PrintWriter out, EmployeePojo p) {
-        out.println("<br>");
-        out.println("Name: " + p.getName());
-        out.println("<br>");
-        out.println("Age: " + p.getAge());
-        out.println("<br>");
-        out.println("Id: " + p.getId());
-
-    }
 }

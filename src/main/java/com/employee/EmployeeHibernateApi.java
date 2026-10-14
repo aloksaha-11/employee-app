@@ -47,8 +47,21 @@ public class EmployeeHibernateApi {
         }
     }
 
-    public void update(int id, EmployeePojo p) throws SQLException {
-    //TODO implement this method
+    // Copies name and age from p onto the stored employee; returns false when no employee has this id
+    public boolean update(int id, EmployeePojo p) throws SQLException {
+        try {
+            return getSessionFactory().fromTransaction(session -> {
+                EmployeePojo existing = session.find(EmployeePojo.class, id);
+                if (existing == null) {
+                    return false;
+                }
+                existing.setName(p.getName());
+                existing.setAge(p.getAge());
+                return true;
+            });
+        } catch (PersistenceException e) {
+            throw new SQLException("Could not update employee with id " + id, e);
+        }
     }
 
     // Returns false when no employee has this id
